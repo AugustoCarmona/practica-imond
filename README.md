@@ -1,8 +1,8 @@
-# Trabajo Práctico Final — Introducción al Marketing Online y los Negocios Digitales
+# Práctica — Introducción al Marketing Online y los Negocios Digitales
 
-Este repositorio tiene los datos de **EcoBottle AR** para el trabajo práctico final.
+Este repositorio tiene los datos de **EcoBottle AR** para la práctica.
 
-- **Consigna:** [Trabajo Práctico Final](https://docs.google.com/document/d/15RNP3FVqLjO4jzh80AAkK6mUR5DOLqPxLjQxqvdzrYg/edit?usp=sharing)
+- **Consigna:** [Práctica](https://docs.google.com/document/d/15RNP3FVqLjO4jzh80AAkK6mUR5DOLqPxLjQxqvdzrYg/edit?usp=sharing)
 - **Diagrama de las tablas de origen (DER):** [ver más abajo](#diagrama-de-las-tablas-de-origen-der)
 
 ## ¿Qué hay en el repositorio?
@@ -196,7 +196,7 @@ ORDER BY mes;
 
 ## ¿Y la carpeta `generator/`?
 
-Es el programa que **inventó estos datos** simulando el negocio: clientes que se registran, compran, pagan, reciben el envío y responden la encuesta. **No lo necesitás para el TP.** Si te interesa ver cómo se arma un conjunto de datos de prueba, podés leerlo; el detalle está en [`generator/README.md`](./generator/README.md).
+Es el programa que **inventó estos datos** simulando el negocio: clientes que se registran, compran, pagan, reciben el envío y responden la encuesta. **No lo necesitás para la práctica.** Si te interesa ver cómo se arma un conjunto de datos de prueba, podés leerlo; el detalle está en [`generator/README.md`](./generator/README.md).
 
 Si alguna vez querés volver a generar los datos o comprobar que están bien:
 

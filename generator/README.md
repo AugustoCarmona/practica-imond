@@ -1,6 +1,6 @@
 # Generador de datos de ejemplo
 
-> Este documento tiene el detalle técnico. Para hacer el TP alcanza con el [README principal](../README.md).
+> Este documento tiene el detalle técnico. Para hacer la práctica alcanza con el [README principal](../README.md).
 
 Los CSV de [`raw/`](../raw) simulan una **extracción del sistema transaccional (OLTP) de EcoBottle AR** con fecha de corte **2025-09-30 23:59:59**. Contienen los pedidos del 01/01/2024 al 30/09/2025 y todo lo que ocurrió hasta el corte (pagos, envíos, encuestas y sesiones web). Todos los horarios están en hora local de Argentina.
 
