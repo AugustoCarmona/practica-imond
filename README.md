@@ -8,7 +8,7 @@ Este repositorio tiene los datos de **EcoBottle AR** para el trabajo práctico f
 ## ¿Qué hay en el repositorio?
 
 ```
-raw/               los datos de origen: un archivo CSV por tabla
+raw/               los datos de origen: un archivo CSV por tabla (en SQL: raw.<tabla>)
 sql/               acá escribís tus transformaciones en SQL        ← tu trabajo va acá
 run_sql.py         ejecuta tus archivos SQL y arma el data warehouse
 requirements.txt   lo que hay que instalar (DuckDB)
@@ -44,6 +44,8 @@ assets/            el diagrama de tablas de origen (DER)
 | `shipment.csv` | Los envíos por correo | ~7.000 |
 | `web_session.csv` | Las visitas a la web | ~100.000 |
 | `nps_response.csv` | Las respuestas a la encuesta de satisfacción (NPS) | ~3.000 |
+
+En SQL, cada archivo es una tabla del esquema `raw`: `raw/sales_order.csv` se consulta como `raw.sales_order`.
 
 ### Diagrama de las tablas de origen (DER)
 
@@ -124,7 +126,24 @@ pip install -r requirements.txt
 
 > En Mac, si el comando `python` no existe, usá `python3`. Cada vez que abras una terminal nueva, volvé a activar el entorno.
 
-### 2. Escribir tus transformaciones en SQL
+### 2. Explorar las tablas de origen
+
+```bash
+python run_sql.py --explorar
+```
+
+Abre DuckDB en el navegador con las 13 tablas de origen cargadas. Hacé clic en una tabla para ver sus columnas y datos, y escribí consultas para conocerla:
+
+```sql
+SELECT * FROM raw.sales_order LIMIT 10;
+DESCRIBE raw.sales_order;
+```
+
+- **No ejecuta tus archivos de `sql/`**, así que funciona aunque todavía no hayas escrito nada o tengas errores.
+- **Necesita internet.** Sin conexión se abre una consola SQL en la terminal: terminás cada consulta con `;` y salís escribiendo `salir`.
+- **Para cerrar,** volvé a la terminal y presioná Enter.
+
+### 3. Escribir tus transformaciones en SQL
 
 | Archivo | Qué va adentro |
 |---|---|
@@ -132,9 +151,9 @@ pip install -r requirements.txt
 | `sql/02_hechos.sql` | Las tablas de hechos, con sus `FOREIGN KEY` hacia las dimensiones. |
 | `sql/03_consultas.sql` | Consultas para revisar el modelo y calcular los KPIs. |
 
-Podés agregar más archivos: se ejecutan en orden alfabético (`01_...`, `02_...`, `03_...`).
+Cuando una consulta te funciona mientras explorás, pasala al archivo que corresponde. Podés agregar más archivos: se ejecutan en orden alfabético (`01_...`, `02_...`, `03_...`).
 
-### 3. Ejecutar
+### 4. Armar el data warehouse
 
 ```bash
 python run_sql.py
@@ -149,25 +168,25 @@ Esto hace cuatro cosas:
 
 Si hay un error, te dice en qué archivo y en qué sentencia está y por qué falló. Lo corregís y volvés a ejecutar. Como todo se arma desde cero cada vez, no hace falta borrar tablas a mano.
 
-### 4. Ver tu modelo y explorar los datos
+> La base `warehouse.duckdb` no se sube a GitHub (está en `.gitignore`): cualquiera la vuelve a crear con `python run_sql.py`.
+
+### 5. Ver tu modelo
 
 - **El diagrama:** abrí `dw/modelo_estrella.md` en GitHub y vas a ver el modelo dibujado, con las claves y las relaciones. Podés copiarlo en tu README. En VS Code se ve con la extensión *Markdown Preview Mermaid Support*.
-- **Explorar las tablas:** `python run_sql.py --ui` abre DuckDB en el navegador. Ahí ves tus tablas, probás consultas y armás gráficos rápidos. La primera vez necesita internet. Para cerrarlo, volvé a la terminal y presioná Enter.
-
-> La base `warehouse.duckdb` no se sube a GitHub (está en `.gitignore`): cualquiera la vuelve a crear con `python run_sql.py`.
+- **Tus tablas en el navegador:** `python run_sql.py --ui` arma el data warehouse y después abre DuckDB con tus tablas y las de origen, para revisar resultados y armar gráficos rápidos.
 
 ### Mini guía de SQL en DuckDB
 
 ```sql
--- Leer un CSV como si fuera una tabla
-SELECT * FROM 'raw/sales_order.csv' LIMIT 10;
+-- Ver las primeras filas de una tabla de origen
+SELECT * FROM raw.sales_order LIMIT 10;
 
--- Ver las columnas y los tipos de un CSV
-DESCRIBE SELECT * FROM 'raw/sales_order.csv';
+-- Ver sus columnas y tipos
+DESCRIBE raw.sales_order;
 
 -- Agrupar por mes
 SELECT DATE_TRUNC('month', order_date) AS mes, COUNT(*) AS pedidos
-FROM 'raw/sales_order.csv'
+FROM raw.sales_order
 GROUP BY mes
 ORDER BY mes;
 ```
