@@ -8,12 +8,16 @@ Este repositorio tiene los datos de **EcoBottle AR** para el trabajo práctico f
 ## ¿Qué hay en el repositorio?
 
 ```
-raw/         los datos de origen: un archivo CSV por tabla   ← con esto vas a trabajar
-generator/   el programa que creó los datos de raw/ (no hace falta usarlo)
-assets/      el diagrama de tablas (DER)
+raw/               los datos de origen: un archivo CSV por tabla
+sql/               acá escribís tus transformaciones en SQL        ← tu trabajo va acá
+run_sql.py         ejecuta tus archivos SQL y arma el data warehouse
+requirements.txt   lo que hay que instalar (DuckDB)
+dw/                el data warehouse: se crea solo al ejecutar run_sql.py
+generator/         el programa que creó los datos de raw/ (no hace falta usarlo)
+assets/            el diagrama de tablas de origen (DER)
 ```
 
-> ⚠️ **No modifiques los archivos de `raw/`.** Son los datos de origen. Tus scripts tienen que leerlos y guardar los resultados en otra carpeta (DW).
+> ⚠️ **No modifiques los archivos de `raw/`.** Son los datos de origen. Tus consultas SQL los leen y el resultado queda en `dw/`.
 
 ## Los datos en un minuto
 
@@ -21,7 +25,7 @@ assets/      el diagrama de tablas (DER)
 - Tienen los pedidos del **01/01/2024 al 30/09/2025**.
 - Los montos están en **pesos argentinos**, y los precios de lista **no incluyen IVA**.
 - Las fechas y horas están en **hora de Argentina**.
-- Una **celda vacía** en un CSV significa que ese dato no existe (en SQL sería `NULL`; en pandas aparece como `NaN`).
+- Una **celda vacía** en un CSV significa que ese dato no existe. En SQL aparece como `NULL`.
 
 ## Las tablas
 
@@ -89,9 +93,81 @@ assets/      el diagrama de tablas (DER)
 
 ## Para empezar
 
-1. Hacé un **fork** de este repositorio y clonalo en tu computadora.
-2. Abrí los CSV de `raw/` con Python. Por ejemplo, con pandas: `pd.read_csv("raw/sales_order.csv")`.
-3. Seguí la [consigna](https://docs.google.com/document/d/15RNP3FVqLjO4jzh80AAkK6mUR5DOLqPxLjQxqvdzrYg/edit?usp=sharing).
+Vas a escribir las transformaciones en **SQL** usando **DuckDB**, una base de datos que se instala con Python. No necesita servidor ni crear cuentas.
+
+### 1. Preparar tu computadora (una sola vez)
+
+Necesitás tener instalado Python 3.9 o más nuevo y Git. Primero hacé un **fork** de este repositorio en GitHub y después, en la terminal:
+
+```bash
+git clone URL-DE-TU-FORK
+cd NOMBRE-DE-LA-CARPETA
+python -m venv .venv
+```
+
+Activá el entorno virtual:
+
+- **Mac / Linux:** `source .venv/bin/activate`
+- **Windows:** `.venv\Scripts\activate`
+
+Instalá DuckDB:
+
+```bash
+pip install -r requirements.txt
+```
+
+> En Mac, si el comando `python` no existe, usá `python3`. Cada vez que abras una terminal nueva, volvé a activar el entorno.
+
+### 2. Escribir tus transformaciones en SQL
+
+| Archivo | Qué va adentro |
+|---|---|
+| `sql/01_dimensiones.sql` | Las tablas de dimensiones. Tiene un **ejemplo resuelto** (`dim_product`) para que veas cómo se hace. |
+| `sql/02_hechos.sql` | Las tablas de hechos, con sus `FOREIGN KEY` hacia las dimensiones. |
+| `sql/03_consultas.sql` | Consultas para revisar el modelo y calcular los KPIs. |
+
+Podés agregar más archivos: se ejecutan en orden alfabético (`01_...`, `02_...`, `03_...`).
+
+### 3. Ejecutar
+
+```bash
+python run_sql.py
+```
+
+Esto hace cuatro cosas:
+
+1. Crea la base de datos `warehouse.duckdb` desde cero.
+2. Ejecuta tus archivos de `sql/` en orden y muestra en la terminal el resultado de cada `SELECT`.
+3. Guarda cada tabla que creaste como CSV en `dw/`. **Esos CSV son los que después abrís en Power BI.**
+4. Dibuja tu modelo estrella en `dw/modelo_estrella.md`.
+
+Si hay un error, te dice en qué archivo y en qué sentencia está y por qué falló. Lo corregís y volvés a ejecutar. Como todo se arma desde cero cada vez, no hace falta borrar tablas a mano.
+
+### 4. Ver tu modelo y explorar los datos
+
+- **El diagrama:** abrí `dw/modelo_estrella.md` en GitHub y vas a ver el modelo dibujado, con las claves y las relaciones. Podés copiarlo en tu README. En VS Code se ve con la extensión *Markdown Preview Mermaid Support*.
+- **Explorar las tablas:** `python run_sql.py --ui` abre DuckDB en el navegador. Ahí ves tus tablas, probás consultas y armás gráficos rápidos. La primera vez necesita internet. Para cerrarlo, volvé a la terminal y presioná Enter.
+
+> La base `warehouse.duckdb` no se sube a GitHub (está en `.gitignore`): cualquiera la vuelve a crear con `python run_sql.py`.
+
+### Mini guía de SQL en DuckDB
+
+```sql
+-- Leer un CSV como si fuera una tabla
+SELECT * FROM 'raw/sales_order.csv' LIMIT 10;
+
+-- Ver las columnas y los tipos de un CSV
+DESCRIBE SELECT * FROM 'raw/sales_order.csv';
+
+-- Agrupar por mes
+SELECT DATE_TRUNC('month', order_date) AS mes, COUNT(*) AS pedidos
+FROM 'raw/sales_order.csv'
+GROUP BY mes
+ORDER BY mes;
+```
+
+- **Datos vacíos:** se buscan con `IS NULL`, y `COALESCE(columna, valor)` reemplaza un vacío por un valor.
+- **Más ayuda:** [documentación de SQL de DuckDB](https://duckdb.org/docs/current/sql/introduction.html).
 
 ## ¿Y la carpeta `generator/`?
 
