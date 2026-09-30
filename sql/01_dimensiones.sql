@@ -3,10 +3,12 @@
 -- =====================================================================
 -- Para cada dimensión:
 --   1. CREATE TABLE con sus columnas, tipos y PRIMARY KEY.
---   2. INSERT INTO ... SELECT para cargarla desde los CSV de raw/.
+--   2. INSERT INTO ... SELECT para cargarla desde las tablas de origen.
 --
--- Los CSV se leen como si fueran tablas:   FROM 'raw/product.csv'
--- Para ver qué columnas y tipos tiene uno: DESCRIBE SELECT * FROM 'raw/product.csv';
+-- Las tablas de origen (los CSV de raw/) están en el esquema raw:
+--     FROM raw.product
+-- Para ver qué columnas y tipos tiene una:  DESCRIBE raw.product;
+-- Para explorarlas antes de escribir nada:  python run_sql.py --explorar
 -- =====================================================================
 
 
@@ -40,9 +42,9 @@ SELECT
     c.name AS category,
     f.name AS family,
     p.list_price
-FROM 'raw/product.csv' AS p
-LEFT JOIN 'raw/product_category.csv' AS c ON c.category_id = p.category_id   -- categoría
-LEFT JOIN 'raw/product_category.csv' AS f ON f.category_id = c.parent_id;    -- familia (categoría padre)
+FROM raw.product AS p
+LEFT JOIN raw.product_category AS c ON c.category_id = p.category_id   -- categoría
+LEFT JOIN raw.product_category AS f ON f.category_id = c.parent_id;    -- familia (categoría padre)
 
 
 -- ---------------------------------------------------------------------

@@ -11,13 +11,13 @@
 --        - PRIMARY KEY
 --        - una FOREIGN KEY por cada dimensión:  product_key INTEGER REFERENCES dim_product (product_key)
 --        - las métricas (cantidades, importes, puntajes...)
---   3. INSERT INTO ... SELECT uniendo los CSV de raw/ con las dimensiones
+--   3. INSERT INTO ... SELECT uniendo las tablas de origen (raw.) con las dimensiones
 --      para obtener las claves.
 --
 -- Patrón para obtener la clave de una dimensión:
 --
 --   SELECT i.order_item_id, p.product_key, i.quantity, i.line_total
---   FROM 'raw/sales_order_item.csv' AS i
+--   FROM raw.sales_order_item AS i
 --   JOIN dim_product AS p ON p.product_id = i.product_id
 --
 -- Si una FOREIGN KEY apunta a una clave que no existe en la dimensión,
