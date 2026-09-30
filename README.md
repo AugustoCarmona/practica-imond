@@ -3,7 +3,7 @@
 Este repositorio tiene los datos de **EcoBottle AR** para el trabajo práctico final.
 
 - **Consigna:** [Trabajo Práctico Final](https://docs.google.com/document/d/15RNP3FVqLjO4jzh80AAkK6mUR5DOLqPxLjQxqvdzrYg/edit?usp=sharing)
-- **Diagrama de tablas (DER):** [assets/DER.png](./assets/DER.png)
+- **Diagrama de las tablas de origen (DER):** [ver más abajo](#diagrama-de-las-tablas-de-origen-der)
 
 ## ¿Qué hay en el repositorio?
 
@@ -44,6 +44,12 @@ assets/            el diagrama de tablas de origen (DER)
 | `shipment.csv` | Los envíos por correo | ~7.000 |
 | `web_session.csv` | Las visitas a la web | ~100.000 |
 | `nps_response.csv` | Las respuestas a la encuesta de satisfacción (NPS) | ~3.000 |
+
+### Diagrama de las tablas de origen (DER)
+
+Cada caja es una tabla (un CSV de `raw/`) y cada línea une una clave foránea (FK) con la clave primaria (PK) a la que apunta.
+
+![Diagrama entidad-relación de las tablas de origen](./assets/DER.png)
 
 ## Cómo leer los datos
 
