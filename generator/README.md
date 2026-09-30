@@ -1,5 +1,7 @@
 # Generador de datos de ejemplo
 
+> Este documento tiene el detalle técnico. Para hacer el TP alcanza con el [README principal](../README.md).
+
 Los CSV de [`raw/`](../raw) simulan una **extracción del sistema transaccional (OLTP) de EcoBottle AR** con fecha de corte **2025-09-30 23:59:59**. Contienen los pedidos del 01/01/2024 al 30/09/2025 y todo lo que ocurrió hasta el corte (pagos, envíos, encuestas y sesiones web). Todos los horarios están en hora local de Argentina.
 
 Los datos no se generan tabla por tabla. Se simula el negocio de punta a punta (clientes que se registran, compran, pagan, reciben el envío, navegan la web y responden la encuesta) y cada tabla sale de esa simulación. Así, fechas, montos y estados son coherentes entre sí.
@@ -82,17 +84,3 @@ python generator/validate_raw.py     # valida las reglas y muestra los KPIs mens
   - `organic`: búsquedas.
 - Cada compra online ocurre dentro de una sesión del cliente. Las sesiones con `customer_id` NULL son de visitantes no logueados, incluidas las previas a registrarse.
 - `ended_at` es NULL cuando la sesión no registró evento de cierre o seguía abierta al corte.
-
-<details>
-<summary><strong>Patrones incorporados (spoilers para el análisis)</strong></summary>
-
-- **Estacionalidad:** las botellas se venden más en verano y menos en invierno. Sport B lidera el ranking en verano y cerca del Día del Padre; Classic A, en invierno y en la vuelta a clases.
-- **Eventos:**
-  - Picos online en Hot Sale (mayo), CyberMonday y Black Friday (noviembre 2024).
-  - Subas en ambos canales por Día del Padre, Día de la Madre, Día del Niño, fiestas de diciembre y vuelta a clases.
-  - Más tráfico `direct`/`referral` los días de newsletter (2.º y 4.º martes de cada mes).
-- **Crecimiento:** el canal online crece ~25-30 % interanual; las tiendas se mantienen estables.
-- **Demoras del correo en julio y agosto de 2024:** las entregas se alargan y el NPS online cae fuerte en el 3.er trimestre de 2024.
-- **Provincias:** Buenos Aires es la provincia con más ventas online (~40 %); en tiendas las cuatro están más parejas.
-
-</details>
