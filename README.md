@@ -2,6 +2,7 @@
 
 Este repositorio tiene los datos de **EcoBottle AR** para la práctica.
 
+- **Libro de la cátedra:** [libro/](libro/README.md) — teoría, ejercicios y planificación del cuatrimestre
 - **Consigna:** [Práctica](https://docs.google.com/document/d/15RNP3FVqLjO4jzh80AAkK6mUR5DOLqPxLjQxqvdzrYg/edit?usp=sharing)
 - **Diagrama de las tablas de origen (DER):** [ver más abajo](#diagrama-de-las-tablas-de-origen-der)
 
